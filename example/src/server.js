@@ -1,18 +1,18 @@
 import express from 'express';
-import serveStatic from 'serve-static';
+
 import SseStream from 'ssestream';
 
 const app = express();
-app.use(serveStatic(__dirname));
+
 app.get('/sse', async (req, res) => {
   const lastEventId = req.header('Last-Event-ID');
   const eventsString = req.query.events;
-  const events = eventsString ? parseInt(eventsString as string, 10) : undefined;
+  const events = eventsString ? parseInt(eventsString, 10) : undefined;
 
   const sseStream = new SseStream(req);
   sseStream.pipe(res);
 
-  const writeMessage = (id: string) => {
+  const writeMessage = (id) => {
     sseStream.write({
       id: id,
       event: 'server-time',
